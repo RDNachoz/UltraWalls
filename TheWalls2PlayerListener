@@ -3,8 +3,6 @@ package me.Hoot215.TheWalls2;
 import java.util.List;
 import java.util.Random;
 
-import me.Hoot215.TheWalls2.util.Teleport;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -72,7 +70,28 @@ public class TheWalls2PlayerListener implements Listener
               }
           }
       }
-    
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerDeath (PlayerDeathEvent event)
+      {
+        Player player = event.getEntity();
+        String playerName = player.getName();
+        TheWalls2GameList gameList = plugin.getGameList();
+        TheWalls2RespawnQueue respawnQueue = plugin.getRespawnQueue();
+        
+        if (gameList == null)
+          return;
+        
+        if (gameList.isInGame(playerName))
+          {
+          plugin.getGameList();gameList.notifyAll(
+                ChatColor.YELLOW.toString() + playerName + ChatColor.RED.toString()
+                    + " has been defeated in " + "a game of The Walls 2!");
+            gameList.removeFromGame(playerName);
+            respawnQueue.addPlayer(playerName, player.getLocation());
+            plugin.checkIfGameIsOver();
+            return;
+            }
+          }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace (BlockPlaceEvent event)
       {
@@ -122,7 +141,6 @@ public class TheWalls2PlayerListener implements Listener
               }
           }
       }
-    
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract (PlayerInteractEvent event)
       {
@@ -135,6 +153,7 @@ public class TheWalls2PlayerListener implements Listener
               {
                 if (plugin.getQueue().isInQueue(player.getName()))
                   {
+                    if (event.getAction()==org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK&&event.getClickedBlock().getType()==org.bukkit.Material.STONE_BUTTON)return;
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED
                         + "You can't do that until the game starts!");
@@ -204,39 +223,13 @@ public class TheWalls2PlayerListener implements Listener
                         if (teams.compareTeams(player.getName(),
                             attacker.getName()))
                           {
+                          attacker.sendMessage(ChatColor.RED
+                            + "Friendly fire is disabled!");
                             event.setCancelled(true);
                           }
-                        
-                        attacker.sendMessage(ChatColor.RED
-                            + "Friendly fire is disabled!");
                       }
                   }
               }
-          }
-      }
-    
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerDeath (PlayerDeathEvent event)
-      {
-        Player player = event.getEntity();
-        String playerName = player.getName();
-        TheWalls2GameList gameList = plugin.getGameList();
-        TheWalls2PlayerQueue queue = plugin.getQueue();
-        TheWalls2RespawnQueue respawnQueue = plugin.getRespawnQueue();
-        
-        if (gameList == null)
-          return;
-        
-        if (gameList.isInGame(playerName))
-          {
-            plugin.getServer().broadcastMessage(
-                ChatColor.YELLOW + playerName + ChatColor.RED
-                    + " has been defeated in " + "a game of The Walls 2!");
-            gameList.removeFromGame(playerName);
-            respawnQueue.addPlayer(playerName,
-                queue.getLastPlayerLocation(playerName));
-            plugin.checkIfGameIsOver();
-            return;
           }
       }
     
@@ -261,7 +254,7 @@ public class TheWalls2PlayerListener implements Listener
         if (gameList.isInGame(playerName))
           {
             int time = plugin.getConfig().getInt("general.disconnect-timer");
-            plugin.getServer().broadcastMessage(
+            plugin.getLogger().info(
                 ChatColor.YELLOW + playerName + ChatColor.RED
                     + " has disconnected! " + "They have "
                     + String.valueOf(time)
@@ -278,7 +271,7 @@ public class TheWalls2PlayerListener implements Listener
                         if (plugin.getServer().getPlayer(playerName) == null)
                           {
                             futureGameList.removeFromGame(playerName);
-                            plugin.getServer().broadcastMessage(
+                            plugin.getLogger().info(
                                 ChatColor.YELLOW + playerName + ChatColor.RED
                                     + " has forfeit The Walls 2");
                             plugin.checkIfGameIsOver();
@@ -292,19 +285,26 @@ public class TheWalls2PlayerListener implements Listener
     public void onPlayerRespawn (PlayerRespawnEvent event)
       {
         Player player = event.getPlayer();
-        String playerName = player.getName();
+        final String playerName = player.getName();
         TheWalls2RespawnQueue respawnQueue = plugin.getRespawnQueue();
         
         if (respawnQueue.isInRespawnQueue(playerName))
           {
-            event.setRespawnLocation(respawnQueue
+            respawnQueue.removePlayer(playerName);
+            plugin.getServer().getScheduler().runTaskLater(plugin,new Runnable(){
+              public void run(){
+                Player fplayer=plugin.getServer().getPlayerExact(playerName);
+                if (fplayer!=null)plugin.getServer().dispatchCommand(fplayer,"warp Standing_Stones");
+              }
+            },5L);}
+            /*event.setRespawnLocation(respawnQueue
                 .getLastPlayerLocation(playerName));
             respawnQueue.removePlayer(playerName);
             player.getInventory().setContents(
                 plugin.getInventory().getInventoryContents(playerName));
             player.getInventory().setArmorContents(
                 plugin.getInventory().getArmourContents(playerName));
-          }
+          }*/
       }
     
     @EventHandler(priority = EventPriority.MONITOR)
@@ -329,17 +329,7 @@ public class TheWalls2PlayerListener implements Listener
                                     plugin.getServer().getPlayer(playerName);
                                 if (futurePlayer == null)
                                   return;
-                                Location loc =
-                                    plugin.getServer()
-                                        .getWorld(TheWalls2.fallbackWorldName)
-                                        .getSpawnLocation();
-                                Teleport.teleportPlayerToLocation(futurePlayer,
-                                    loc);
-                                futurePlayer.sendMessage(ChatColor.AQUA
-                                    + "[TheWalls2] " + ChatColor.GREEN
-                                    + "You have been teleported "
-                                    + "to a fallback world because you "
-                                    + "left while a game was in progress");
+                                plugin.getServer().dispatchCommand(futurePlayer,"warp Standing_Stones");
                               }
                           }, 1L);
                   }
@@ -356,9 +346,5 @@ public class TheWalls2PlayerListener implements Listener
                     plugin.getInventory().getArmourContents(playerName));
               }
           }
-                              }
-                          {
-              }
-                          {
-      }
+     }
   }
