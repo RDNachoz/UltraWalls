@@ -23,14 +23,14 @@ public class TheWalls2GameList
       }
     
     public void notifyAll (String message)
-      {
-        for (String playerName : gameList)
-          {
-            Player player = Bukkit.getServer().getPlayer(playerName);
-            String prefix = ChatColor.AQUA + "" + ChatColor.YELLOW;
-            player.sendMessage(prefix + message);
+    {
+      for (String playerName : gameList)
+        {
+          Player player = Bukkit.getServer().getPlayer(playerName);
+          String prefix = ChatColor.AQUA + "" + ChatColor.YELLOW;
+          player.sendMessage(prefix + message);
+        }
           }
-      }
     
     public void removeFromGame (String playerName)
       {
@@ -63,4 +63,5 @@ public class TheWalls2GameList
       {
         return gameList;
       }
+
   }
