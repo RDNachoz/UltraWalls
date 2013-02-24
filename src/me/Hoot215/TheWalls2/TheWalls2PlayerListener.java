@@ -3,6 +3,8 @@ package me.Hoot215.TheWalls2;
 import java.util.List;
 import java.util.Random;
 
+import me.Hoot215.TheWalls2.util.Teleport;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +20,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.kitteh.tag.PlayerReceiveNameTagEvent;
+import org.kitteh.tag.TagAPI;
 
 public class TheWalls2PlayerListener implements Listener{
 	private TheWalls2 plugin;
@@ -63,13 +67,13 @@ public class TheWalls2PlayerListener implements Listener{
 		TheWalls2GameList gameList=plugin.getGameList();
 		TheWalls2RespawnQueue respawnQueue=plugin.getRespawnQueue();
 
-		if (gameList==null)
-			return;
+		if (gameList==null)return;
 
 		if (gameList.isInGame(playerName)){
 			plugin.getGameList();
 			gameList.notifyAll(ChatColor.YELLOW.toString()+playerName+ChatColor.RED.toString()+" has been defeated in "+"a game of The Walls 2!");
 			gameList.removeFromGame(playerName);
+			TagAPI.refreshPlayer(player);
 			respawnQueue.addPlayer(playerName,player.getLocation());
 			plugin.checkIfGameIsOver();
 			return;
@@ -119,15 +123,13 @@ public class TheWalls2PlayerListener implements Listener{
 			TheWalls2GameList gameList=plugin.getGameList();
 			if (gameList==null){
 				if (plugin.getQueue().isInQueue(player.getName())){
-					if (event.getAction()==org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK&&event.getClickedBlock().getType()==org.bukkit.Material.STONE_BUTTON)
-						return;
+					if (event.getAction()==org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK&&event.getClickedBlock().getType()==org.bukkit.Material.STONE_BUTTON) return;
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED+"You can't do that until the game starts!");
 				}
 			}
 			else{
-				if (player.getItemInHand().getType()!=Material.COMPASS||!gameList.isInGame(player.getName()))
-					return;
+				if (player.getItemInHand().getType()!=Material.COMPASS||!gameList.isInGame(player.getName())) return;
 
 				Player randomPlayer=null;
 				int count=0;
@@ -136,8 +138,7 @@ public class TheWalls2PlayerListener implements Listener{
 					int playerCount=playerList.size();
 					int randomInt=new Random().nextInt(playerCount);
 					randomPlayer=playerList.get(randomInt);
-					if (randomPlayer!=player)
-						break;
+					if (randomPlayer!=player)break;
 					if (count>=20){
 						player.sendMessage(ChatColor.RED+"Either you are "+"extremely unlucky or there is no one else "+"playing with you!");
 						return;
@@ -152,8 +153,7 @@ public class TheWalls2PlayerListener implements Listener{
 
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event){
-		if (!(event.getEntity() instanceof Player))
-			return;
+		if (!(event.getEntity() instanceof Player)) return;
 
 		Player player=(Player)event.getEntity();
 
@@ -164,8 +164,7 @@ public class TheWalls2PlayerListener implements Listener{
 				}
 			}
 			else{
-				if (!(event.getDamager() instanceof Player))
-					return;
+				if (!(event.getDamager() instanceof Player)) return;
 
 				if (!plugin.getConfig().getBoolean("general.friendly-fire")){
 					Player attacker=(Player)event.getDamager();
@@ -203,8 +202,7 @@ public class TheWalls2PlayerListener implements Listener{
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
 				public void run(){
 					TheWalls2GameList futureGameList=plugin.getGameList();
-					if (futureGameList==null)
-						return;
+					if (futureGameList==null) return;
 
 					if (plugin.getServer().getPlayer(playerName)==null){
 						futureGameList.removeFromGame(playerName);
@@ -227,8 +225,7 @@ public class TheWalls2PlayerListener implements Listener{
 			plugin.getServer().getScheduler().runTaskLater(plugin,new Runnable(){
 				public void run(){
 					Player fplayer=plugin.getServer().getPlayerExact(playerName);
-					if (fplayer!=null)
-						plugin.getServer().dispatchCommand(fplayer,"warp Standing_Stones");
+					if (fplayer!=null)Teleport.warpToStandingStones(plugin,fplayer);
 				}
 			},5L);
 		}
@@ -255,9 +252,8 @@ public class TheWalls2PlayerListener implements Listener{
 					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
 						public void run(){
 							Player futurePlayer=plugin.getServer().getPlayer(playerName);
-							if (futurePlayer==null)
-								return;
-							plugin.getServer().dispatchCommand(futurePlayer,"warp Standing_Stones");
+							if (futurePlayer==null) return;
+							Teleport.warpToStandingStones(plugin,futurePlayer);
 						}
 					},1L);
 				}
@@ -269,6 +265,18 @@ public class TheWalls2PlayerListener implements Listener{
 				player.getInventory().setContents(plugin.getInventory().getInventoryContents(playerName));
 				player.getInventory().setArmorContents(plugin.getInventory().getArmourContents(playerName));
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerTagRequest(PlayerReceiveNameTagEvent e){
+		if (e.getPlayer().getWorld().getName().equals(TheWalls2.worldName)){
+			String name=e.getPlayer().getName();
+			int team=plugin.getGameTeams().getPlayerTeam(name);
+			if (team==1)e.setTag(ChatColor.RED+name);
+			else if (team==2)e.setTag(ChatColor.YELLOW+name);
+			else if (team==3)e.setTag(ChatColor.GREEN+name);
+			else if (team==4)e.setTag(ChatColor.AQUA+name);
 		}
 	}
 }

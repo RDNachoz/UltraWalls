@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.kitteh.tag.TagAPI;
 
 public class TheWalls2 extends JavaPlugin{
 	private TheWalls2 plugin=this;
@@ -83,6 +84,24 @@ public class TheWalls2 extends JavaPlugin{
 								queue.addPlayer(player.getName(),player.getLocation());
 								Teleport.teleportPlayerToLocation(player,locData.getLobby());
 								player.sendMessage(ChatColor.GREEN+"Successfully joined the game queue!");
+								
+								boolean inateam=false;
+								for(int i=1; i<=4; i++){
+									if (!teams.isTeamFull(i)){
+										if (teams.addPlayerToTeam(i,player.getName())){
+											player.sendMessage(ChatColor.GREEN+"Successfully joined team "+String.valueOf(i)+"!");
+											inateam=true;
+											break;
+										}
+									}
+								}
+								if (!inateam){
+									player.sendMessage(ChatColor.RED+"Unable to find a team!");
+									queue.removePlayer(player.getName(),false);
+									Teleport.warpToStandingStones(this,player);
+								}
+								
+								TagAPI.refreshPlayer(player);
 							}
 							else{
 								player.sendMessage(ChatColor.RED+"The game queue is full!");
@@ -343,13 +362,11 @@ public class TheWalls2 extends JavaPlugin{
 		int i=0;
 		Set<String> team=teams.getTeam(teamNumber);
 
-		if (team.size()==0)
-			return;
+		if (team.size()==0)return;
 
 		for(String s:team){
 			Player player=getServer().getPlayer(s);
-			if (player==null)
-				continue;
+			if (player==null)continue;
 			Teleport.teleportPlayerToLocation(player,locData.getSlot(teamNumber,i));
 			inventories.clearInventory(player);
 			i++;
@@ -369,8 +386,7 @@ public class TheWalls2 extends JavaPlugin{
 					playerNameList.add(s);
 					continue;
 				}
-				if (teams.getPlayerTeam(s)!=firstTeam)
-					return false;
+				if (teams.getPlayerTeam(s)!=firstTeam)return false;
 				playerList.add(getServer().getPlayer(s));
 				playerNameList.add(s);
 			}

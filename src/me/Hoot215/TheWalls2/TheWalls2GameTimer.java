@@ -32,8 +32,7 @@ public class TheWalls2GameTimer implements Runnable{
 					}
 				});
 			}
-			else
-				time=time-1;
+			else time=time-1;
 			try{
 				Thread.sleep(60000);
 			}catch(InterruptedException e){

@@ -23,4 +23,8 @@ public class Teleport{
 
 		player.teleport(loc);
 	}
+	
+	public static void warpToStandingStones(TheWalls2 tw, Player player){
+		tw.getServer().dispatchCommand(player,"warp Standing_Stones");
+	}
 }
