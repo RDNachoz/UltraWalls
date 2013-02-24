@@ -25,7 +25,6 @@ public class TheWalls2LocationData
     private Location team4Slot1 = new Location(null, -722.5, 71.0, -132.5);
     private Location team4Slot2 = new Location(null, -722.5, 71.0, -135.5);
     private Set<Cuboid> walls = new HashSet<Cuboid>();
-    private Set<Cuboid> prot = new HashSet<Cuboid>();
     private Cuboid worldCube = new Cuboid(new Location(null, -917, 5, -245),
         new Location(null, -671, 112, -47));
     private Location virtualWallDrop = new Location(null, -690, 11, -140);
@@ -57,18 +56,6 @@ public class TheWalls2LocationData
             null, -784, 97, -182)));
         walls.add(new Cuboid(new Location(null, -785, 68, -243), new Location(
             null, -785, 97, -183)));
-        prot.add(new Cuboid(new Location(null, -803, 68, -243), new Location(
-            null, -803, 97, -183)));
-        prot.add(new Cuboid(new Location(null, -864, 68, -182), new Location(
-            null, -804, 97, -182)));
-        prot.add(new Cuboid(new Location(null, -722, 256, -243), new Location(
-            null, -722, 72, -100)));
-        prot.add(new Cuboid(new Location(null, -722, 256, -100), new Location(
-            null, -864, 72, -101)));
-        prot.add(new Cuboid(new Location(null, -864, 256, -101), new Location(
-            null, -864, 72, -243)));
-        prot.add(new Cuboid(new Location(null, -864, 256, -243), new Location(
-            null, -722, 72, -243)));
       }
     
     public void setWorld (World world)
