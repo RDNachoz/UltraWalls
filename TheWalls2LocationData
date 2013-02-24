@@ -162,13 +162,5 @@ public class TheWalls2LocationData
       {
         return virtualWallDrop;
       }
-    public boolean isPartOfProt (Location loc)
-    {
-      for (Cuboid c : prot)
-        {
-          if (c.isIn(loc))
-            return true;
-        }
-      return false;
   }
   }
