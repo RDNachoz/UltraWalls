@@ -37,17 +37,17 @@ public class TheWalls2 extends JavaPlugin{
 	private Listener entityListener;
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-		if (cmd.getName().equalsIgnoreCase("thewalls")){
+		if (cmd.getName().equalsIgnoreCase("uw")){
 			if (args.length==0){
 				if (sender.hasPermission("thewalls2.command.thewalls")){
 					sender.sendMessage(ChatColor.GREEN+"****"+ChatColor.BOLD+ChatColor.DARK_PURPLE+"UltraWalls"+ChatColor.RESET+ChatColor.GREEN+"****");
-					sender.sendMessage(ChatColor.YELLOW+"/thewalls"+ChatColor.WHITE+" - Displays TheWalls2 help");
-					sender.sendMessage(ChatColor.YELLOW+"/thewalls join"+ChatColor.WHITE+" - Joins the game queue");
-					sender.sendMessage(ChatColor.YELLOW+"/thewalls leave"+ChatColor.WHITE+" - Leaves the game queue");
-					sender.sendMessage(ChatColor.YELLOW+"/thewalls team <1-4>"+ChatColor.WHITE+" - Joins a team");
-					sender.sendMessage(ChatColor.RED+"/thewalls start"+ChatColor.WHITE+" - Starts a game");
-					sender.sendMessage(ChatColor.RED+"/thewalls stop"+ChatColor.WHITE+" - Stops a game");
-					sender.sendMessage(ChatColor.RED+"/thewalls restoreworld"+ChatColor.WHITE+" - Restores the world");
+					sender.sendMessage(ChatColor.YELLOW+"/uw"+ChatColor.WHITE+" - Displays TheWalls2 help");
+					sender.sendMessage(ChatColor.YELLOW+"/uw join"+ChatColor.WHITE+" - Joins the game queue");
+					sender.sendMessage(ChatColor.YELLOW+"/uw leave"+ChatColor.WHITE+" - Leaves the game queue");
+					sender.sendMessage(ChatColor.YELLOW+"/uw team <1-4>"+ChatColor.WHITE+" - Joins a team");
+					sender.sendMessage(ChatColor.RED+"/uw start"+ChatColor.WHITE+" - Starts a game");
+					sender.sendMessage(ChatColor.RED+"/uw stop"+ChatColor.WHITE+" - Stops a game");
+					sender.sendMessage(ChatColor.RED+"/uw restoreworld"+ChatColor.WHITE+" - Restores the world");
 					return true;
 				}
 				sender.sendMessage(ChatColor.RED+"You do not have permission to use that command!");
