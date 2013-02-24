@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import me.Hoot215.TheWalls2.util.Teleport;
-
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -100,11 +100,15 @@ public class TheWalls2PlayerQueue
             Player player = plugin.getServer().getPlayer(playerName);
             Location loc = getLastPlayerLocation(playerName);
             Teleport.teleportPlayerToLocation(player, loc);
-            player.getInventory().setContents(
-                plugin.getInventory().getInventoryContents(playerName));
-            player.getInventory().setArmorContents(
-                plugin.getInventory().getArmourContents(playerName));
-          }
+            player.getInventory().setArmorContents(null);
+            player.getInventory().clear();          
+            player.setHealth(20);
+            player.setFoodLevel(20);
+            player.setFireTicks(0);
+            player.setExp(0);
+            player.setGameMode(GameMode.SURVIVAL);
+            }
+        plugin.getServer().getWorld(TheWalls2.worldName).setTime( 0 );
         queue = new HashSet<String>();
       }
   }
