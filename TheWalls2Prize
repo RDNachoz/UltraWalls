@@ -34,7 +34,7 @@ public class TheWalls2Prize
         short prizeData = Short.parseShort(prize[1]);
         ItemStack item = new ItemStack(prizeID, prizeAmount, prizeData);
         player.getWorld().dropItem(player.getLocation(), item);
-        player.sendMessage(ChatColor.AQUA + "[TheWalls2] " + ChatColor.GREEN
+        player.sendMessage(ChatColor.DARK_PURPLE + "[UltraWalls] " + ChatColor.GREEN
             + "Here's your prize!");
       }
     
@@ -42,9 +42,9 @@ public class TheWalls2Prize
       {
         double amount = plugin.getConfig().getDouble("general.prize-money");
         TheWalls2.economy.depositPlayer(player.getName(), amount);
-        player.sendMessage(ChatColor.AQUA + "[TheWalls2] " + ChatColor.GREEN
+        player.sendMessage(ChatColor.DARK_PURPLE + "[UltraWalls] " + ChatColor.GREEN
             + "Here's your prize!");
-        player.sendMessage(ChatColor.AQUA + "[TheWalls2] " + ChatColor.GOLD
+        player.sendMessage(ChatColor.DARK_PURPLE + "[UltraWalls] " + ChatColor.GOLD
             + TheWalls2.economy.format(amount) + ChatColor.GREEN
             + " has been deposited into your account");
       }
