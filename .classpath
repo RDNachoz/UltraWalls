@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/Dan/Dropbox/Ultra-gaming plugins/References/bukkit-1.4.7-R0.2-20130124.100820-7.jar">
 		<attributes>
@@ -7,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Dan/Dropbox/Ultra-gaming plugins/References/Vault.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dan/Dropbox/Ultra-gaming plugins/References/craftbukkit-1.4.7-R1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
