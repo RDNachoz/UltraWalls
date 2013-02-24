@@ -16,12 +16,12 @@ public class TheWalls2World{
 		World world=plugin.getServer().getWorld(TheWalls2.worldName);
 		for(Player player:world.getPlayers()){
 			if (player==null)break;
-			player.kickPlayer("[TheWalls2] You can't be in the world when it unloads! Please re-join in a few seconds.");
+			player.kickPlayer("[UltraWalls] You can't be in the world when it unloads! Please re-join in a few seconds.");
 		}
 		for(Player player:plugin.getRespawnQueue().getPlayerList()){
 			if (player==null)break;
 
-			player.kickPlayer("[TheWalls2] You can't be in the world when it unloads! Please re-join in a few seconds.");
+			player.kickPlayer("[UltraWalls] You can't be in the world when it unloads! Please re-join in a few seconds.");
 		}
 
 		CraftWorld cw=(CraftWorld)world;
