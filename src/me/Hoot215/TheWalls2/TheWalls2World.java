@@ -15,16 +15,13 @@ public class TheWalls2World{
 		isRestoring=true;
 		World world=plugin.getServer().getWorld(TheWalls2.worldName);
 		for(Player player:world.getPlayers()){
-			if (player==null)
-				break;
-
-			player.kickPlayer("[TheWalls2] You can't be in the world when "+"it unloads! Please re-join in a few seconds.");
+			if (player==null)break;
+			player.kickPlayer("[TheWalls2] You can't be in the world when it unloads! Please re-join in a few seconds.");
 		}
 		for(Player player:plugin.getRespawnQueue().getPlayerList()){
-			if (player==null)
-				break;
+			if (player==null)break;
 
-			player.kickPlayer("[TheWalls2] You can't be in the world when "+"it unloads! Please re-join in a few seconds.");
+			player.kickPlayer("[TheWalls2] You can't be in the world when it unloads! Please re-join in a few seconds.");
 		}
 
 		CraftWorld cw=(CraftWorld)world;
@@ -46,7 +43,7 @@ public class TheWalls2World{
 						Bukkit.getServer().createWorld(wc).setAutoSave(false);
 					}
 					else{
-						System.out.println("[TheWalls2] "+"The world failed to unload!");
+						System.out.println("[TheWalls2] The world failed to unload!");
 					}
 					isRestoring=false;
 				}
