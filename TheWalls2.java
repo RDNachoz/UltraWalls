@@ -1,11 +1,9 @@
 package me.Hoot215.TheWalls2;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import me.Hoot215.TheWalls2.api.AddonLoader;
 import me.Hoot215.TheWalls2.util.Teleport;
 import net.milkbowl.vault.economy.Economy;
 
@@ -28,7 +26,6 @@ public class TheWalls2 extends JavaPlugin
     public static String worldName;
     public static String fallbackWorldName;
     public static Economy economy = null;
-    private AddonLoader addonLoader;
     private TheWalls2PlayerQueue queue;
     private TheWalls2GameTeams teams;
     private TheWalls2GameList gameList;
@@ -49,8 +46,8 @@ public class TheWalls2 extends JavaPlugin
                 if (sender.hasPermission("thewalls2.command.thewalls"))
                   {
                     sender.sendMessage(ChatColor.GREEN + "****"
-                        + ChatColor.BOLD + ChatColor.AQUA + " The Walls 2"
-                        + ChatColor.RESET + ChatColor.GREEN + " ****");
+                        + ChatColor.BOLD + ChatColor.DARK_PURPLE + "UltraWalls"
+                        + ChatColor.RESET + ChatColor.GREEN + "****");
                     sender.sendMessage(ChatColor.YELLOW + "/thewalls"
                         + ChatColor.WHITE + " - Displays TheWalls2 help");
                     sender.sendMessage(ChatColor.YELLOW + "/thewalls join"
@@ -489,6 +486,7 @@ public class TheWalls2 extends JavaPlugin
               continue;
             Teleport.teleportPlayerToLocation(player,
                 locData.getSlot(teamNumber, i));
+            inventories.clearInventory(player);
             i++;
           }
       }
@@ -518,12 +516,13 @@ public class TheWalls2 extends JavaPlugin
             final List<String> finalPlayerList = playerNameList;
             
             getServer().broadcastMessage(
-                ChatColor.YELLOW + "Team " + String.valueOf(firstTeam)
-                    + ChatColor.GREEN + " has won The Walls 2!");
+                ChatColor.AQUA + "Team " + String.valueOf(firstTeam)
+                    + ChatColor.DARK_PURPLE + " Has Won UltraWalls!");
             for (Player player : playerList)
               {
                 player.sendMessage(ChatColor.GOLD + "Congratulations! "
                     + "You have won The Walls 2!");
+                getServer().dispatchCommand(player,"warp Standing_Stones");
               }
             
             getServer().getScheduler().scheduleSyncDelayedTask(this,
@@ -610,19 +609,6 @@ public class TheWalls2 extends JavaPlugin
         
         return (economy != null);
       }
-    
-    @Override
-    public void onDisable ()
-      {
-        // Add-ons
-        System.out.println("[TheWalls2] Unloading add-ons...");
-        addonLoader.unloadAddons();
-        
-        plugin.getLogger().info(ChatColor.YELLOW+"World is being unloaded...");
-        getServer().unloadWorld(worldName, false);
-        plugin.getLogger().info(ChatColor.YELLOW+"The World Is Unloaded");
-      }
-    
     @Override
     public void onEnable ()
       {
@@ -648,9 +634,9 @@ public class TheWalls2 extends JavaPlugin
         if ( !prize.equals("item") && !prize.equals("money")
             && !prize.equals("none"))
           {
-            System.out.println("[TheWalls2] ERROR: "
+            System.out.println("[UltraWalls] ERROR: "
                 + "general.prize is set to an unknown value!");
-            System.out.println("[TheWalls2] Falling back to item prize!");
+            System.out.println("[UltraWalls] Falling back to item prize!");
             getConfig().set("general.prize", "item");
             saveConfig();
           }
@@ -658,13 +644,13 @@ public class TheWalls2 extends JavaPlugin
           {
             if ( !setupEconomy())
               {
-                System.out.println("[TheWalls2] ERROR: "
+                System.out.println("[UltraWalls] ERROR: "
                     + "Vault was not enabled for some reason!");
-                System.out.println("[TheWalls2] Falling back to item prize!");
+                System.out.println("[UltraWalls] Falling back to item prize!");
                 getConfig().set("general.prize", "item");
               }
           }
-        System.out.println("[TheWalls2] Prize mode: "
+        System.out.println("[UltraWalls] Prize mode: "
             + getConfig().getString("general.prize"));
         playerListener = new TheWalls2PlayerListener(this);
         getServer().getPluginManager().registerEvents(playerListener, this);
@@ -673,21 +659,6 @@ public class TheWalls2 extends JavaPlugin
             entityListener = new TheWalls2EntityListener();
             getServer().getPluginManager().registerEvents(entityListener, this);
           }
-        
-        // Add-ons
-        plugin.getLogger().info(ChatColor.YELLOW+"Loading Addons");
-        addonLoader = new AddonLoader();
-        addonLoader.loadAddons(new File("plugins/TheWalls2/addons"));
-        
-        if (getConfig().getBoolean("timer.enabled"))
-          {
-            long initialTime = getConfig().getLong("timer.initial-time");
-            long normalTime = getConfig().getLong("timer.normal-time");
-            new Thread(new TheWalls2AutoGameStartTimer(this, initialTime,
-                normalTime)).start();
-          }
-        
-        
-        System.out.println(this + " is now enabled!");
       }
-  }
+  	
+	}
