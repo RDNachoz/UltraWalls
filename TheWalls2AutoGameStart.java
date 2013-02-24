@@ -26,15 +26,15 @@ public class TheWalls2AutoGameStartTimer implements Runnable
           }
         
         plugin.getServer().getScheduler()
-            .scheduleSyncDelayedTask(plugin, new Runnable()
+        .scheduleSyncDelayedTask(plugin, new Runnable()
+          {
+            public void run ()
               {
-                public void run ()
-                  {
-                    TheWalls2GameList gameList = plugin.getGameList();
-                    if (gameList == null && !TheWalls2World.isRestoring
-                        && plugin.startGame())
-                      System.out
-                          .println("[TheWalls2] Game started automatically");
+                TheWalls2GameList gameList = plugin.getGameList();
+                if (gameList == null && !TheWalls2World.isRestoring
+                    && plugin.startGame())
+                  System.out
+                      .println("[UltraWalls] Game started automatically");
                   }
               });
         
@@ -58,7 +58,7 @@ public class TheWalls2AutoGameStartTimer implements Runnable
                         if (gameList == null && !TheWalls2World.isRestoring
                             && plugin.startGame())
                           System.out
-                              .println("[TheWalls2] Game started automatically");
+                              .println("[UltraWalls] Game started automatically");
                       }
                   });
           }
