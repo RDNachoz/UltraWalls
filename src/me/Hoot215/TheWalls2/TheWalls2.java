@@ -148,6 +148,29 @@ public class TheWalls2 extends JavaPlugin{
 					player.sendMessage(ChatColor.RED+"You do not have permission to use that command!");
 					return true;
 				}
+				else if (args[0].equalsIgnoreCase("list")){
+					if (!(sender instanceof Player)){
+						sender.sendMessage(ChatColor.RED+"This command can only be run as a player");
+						return true;
+					}
+					List<Set<String>> tt=new ArrayList<Set<String>>();
+					tt.add(teams.getTeam(1));
+					tt.add(teams.getTeam(2));
+					tt.add(teams.getTeam(3));
+					tt.add(teams.getTeam(4));
+					int i=1;
+					for(Set<String> set:tt){
+						StringBuilder build=new StringBuilder();
+						build.append("Team ").append(i++).append(": ");
+						if (set.size()==0)build.append("nobody");
+						else{
+							for(String s:set)build.append(s).append(", ");
+							for(int a=0; a<2; a++)build.deleteCharAt(build.length()-1);
+						}
+						sender.sendMessage(build.toString());
+					}
+					
+				}
 				else if (args[0].equalsIgnoreCase("team")){
 					Player player;
 
